@@ -1,22 +1,20 @@
 'use strict';
 
 function BinarioADecimal(num) {
-   let sum = 0;
-  // tu codigo aca
-   for (let i = 0; i < num.length; i++){
-      sum += +num[i] * 2 ** (num.length - 1 - i);
+   var result = 0;
+   for (var i = 0; i < num.length; i++) {
+      result = result + num[i] * 2 ** (num.length - 1 -i);
    }
-   return sum;
+   return result;
 }
 
 function DecimalABinario(num) {
-  // tu codigo aca
-   let binario = (num % 2).toString();
-   for (; num > 1; ) {
-      num = parseInt(num / 2);
-      binario =  (num % 2) + (binario);
+   var result = "";
+   while (num >= 1) {
+      result = (num % 2) + result;
+      num = Math.floor(num / 2)
    }
-   return binario;
+   return result;
 }
 
 module.exports = {
