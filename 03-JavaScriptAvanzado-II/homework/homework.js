@@ -47,7 +47,7 @@ function cacheFunction(cb) {
       return obj [argumento] = cb(argumento)
     }
   }
-}
+} 
 
 //----------------------------------------
 
