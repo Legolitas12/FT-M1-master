@@ -10,10 +10,82 @@ Implementar la clase LinkedList, definiendo los siguientes métodos:
   search(isEven), donde isEven es una función que retorna true cuando recibe por parámetro un número par, busca un nodo cuyo valor sea un número par.
   En caso de que la búsqueda no arroje resultados, search debe retornar null.
 */
-function LinkedList() {}
+function LinkedList() {
+  this.head = null;
+  this._length = 0
+}
 
-function Node(value) {}
+function Node(value) {
+  this.value = value;
+  this.next = null
+}
 
+
+LinkedList.prototype.add = function (data) {
+  // creamos la instancia del nodo para guardar la data
+  let node = new Node(data)
+  // corroborar si la lista esta vacia
+  if(this.head === null){
+    this.head = node
+  } else {
+    // tiene al menos un nodo
+    // tratar de recorrerlo
+    let current = this.head
+    while (current.next) {
+      current = current.next
+    }
+    // si me preguntara por current en este momento, seria el ultimo nodo
+    current.next = node;
+  }
+  this._length++
+  return node;
+}
+
+
+LinkedList.prototype.remove = function () {
+  // si la lista esta vacia
+  if (this.head === null) return null
+  // otra opcion
+  if (this._length === 0) return null 
+
+  // Si la lista tiene un solo nodo
+  if (this._length === 1) {
+    let aux = this.head
+    this.head = null
+    this._length--
+    return aux.value
+  }
+  // ya de aqui para abajo no lee
+  // si tiene mas de un nodo
+  let current = this.head
+  while (current.next.next) {
+    current = current.next
+  } 
+  // current es el penultimo nodo
+  let aux = current.next.value
+  // aux es el ultimo nodo
+  current.next = null
+  this._length--
+  return aux
+}
+
+LinkedList.prototype.search = function (value) {
+  // si la lista esta vacia 
+  if(this._length === 0) return null;
+  // Si tiene uno o mas nodos
+  let current = this.head;
+  while (current) {
+    // busco en mi nodo actual, es decir mi current
+    if(value === current.value) return value;
+    if(typeof value === "function"){
+      if(value(current.value) === true) return current.value;
+    } 
+  // pasa al sigiente
+  current = current.next;
+  }
+  // si no enctontro el valor o evaluo la funcion y no dio true
+  return null;
+}
 /* EJERCICIO 2
 Implementar la clase HashTable.
 Nuetra tabla hash, internamente, consta de un arreglo de buckets (slots, contenedores, o casilleros; es decir, posiciones posibles para almacenar la información), donde guardaremos datos en formato clave-valor (por ejemplo, {instructora: 'Ani'}).
@@ -27,13 +99,58 @@ La clase debe tener los siguientes métodos:
 
 Ejemplo: supongamos que quiero guardar {instructora: 'Ani'} en la tabla. Primero puedo chequear, con hasKey, si ya hay algo en la tabla con el nombre 'instructora'; luego, invocando set('instructora', 'Ani'), se almacenará el par clave-valor en un bucket específico (determinado al hashear la clave)
 */
-function HashTable() {}
+function HashTable() {
+this.numBuckets = 35;
+this.buckets = [];
+}
+
+console.log("hola".charCodeAt(3))
+
+HashTable.prototype.hash = function (key) { 
+  let sum = 0
+
+  for (let i = 0; i < key.length; i++) {
+    let code = key.charCodeAt(i)
+    sum = sum + code
+  }
+  // como el numero de buckets es superado 
+  // debemos aplicar el modulo
+  let location = sum % this.numBuckets
+  return location
+}
+
+HashTable.prototype.set = function (key,value) {
+  // validar que la key sea string para poder aplicar el metodo hash correctamente
+  if(typeof(key) !== "string") throw new TypeError("Keys must be a strings")
+  // debemos hashear la key para saber donde ubicar el value
+  let location = this.hash(key)
+  // Me pregunto si el mi buckets ya existe algo para poder guardar el value
+  if(this.buckets[location] === undefined) {
+    this.buckets[location] = {}
+  }
+  this.buckets[location][key] = value
+}
+
+HashTable.prototype.get = function (key) {
+  let location = this.hash(key)
+  return this.buckets[location][key]
+}
+
+HashTable.prototype.hasKey = function (key) {
+  let location = this.hash(key)
+  return this.buckets[location].hasOwnProperty(key) // retornaria true o false
+}
+
+// let hashTable = new HashTable
+// console.log(hashTable)
+// hashTable.hash("hola")
+
 
 // No modifiquen nada debajo de esta linea
 // --------------------------------
 
 module.exports = {
-   Node,
-   LinkedList,
-   HashTable,
+  Node,
+  LinkedList,
+  HashTable,
 };
